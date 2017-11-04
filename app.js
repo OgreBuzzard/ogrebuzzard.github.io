@@ -1,179 +1,194 @@
 'use strict';
 
-// Generate variables to feed into the Constructor and put them in an array
-var firstAndPike = new Store('1st and Pike', 23, 65, 6.3);
-var seaTac = new Store('SeaTac Airport', 3, 24, 1.2);
-var seattleCenter = new Store('Seattle Center', 11, 38, 3.7);
-var capitolHill = new Store('Capitol Hill', 20, 38, 2.3);
-var alki = new Store('Alki', 2, 16, 4.6);
-var stores = [firstAndPike, seaTac, seattleCenter, capitolHill, alki];
+// Create the global varialbes: a click counter, a trigger, an array for which products are in each slot on the page, and a list of images in an array.
+var trialCounter = 0;
+var trialTrigger = 25;
+var imageSlot = [];
+var productsShown = [];
+var productsClicked = [];
+var productsNames = [];
+var images = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'usb', 'water-can', 'wine-glass'];
 
-// Generate store hours
-var hours = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm'];
+if (localStorage.productsShown && localStorage.productsClicked) {
+  productsShown = JSON.parse(localStorage.productsShown);
+  productsClicked = JSON.parse(localStorage.productsClicked);
+}
 
-// Constructor function to create objects
-function Store(name, minCust, maxCust, avgCookCust) {
+// A constructor function that creates objects out of each image in the array and applies properties to them. The first letter of each product name is capitalized.
+function Product(name) {
   this.name = name;
-  this.minCust = minCust;
-  this.maxCust = maxCust;
-  this.avgCookCust = avgCookCust;
-  this.customersHour = [];
-  this.totalSalesByHour = [];
-  this.totalSalesDay = 0;
+  this.fileName = 'image/' + name + '.jpg';
+  this.totalClicks = 0;
+  this.totalShown = 0;
+  this.justShown = false;
 };
 
-// Generate a random number of customers
-Store.prototype.randomCookie = function() {
-  return Math.floor((Math.random() * (this.maxCust - this.minCust)) + this.minCust);
+// Uses the constructor function to push the objects into a new product array.
+var products = [];
+for (var i = 0; i < images.length; i++) {
+  products.push(new Product(images[i]));
 };
 
-// Take the random number of customers to determine number of cookies sold per hour and per day
-Store.prototype.hourlySales = function() {
-  var custHour;
-  var cookiesHour;
-  var cookiesDay = 0;
-  for (var i = 0; i < hours.length; i++) {
-    custHour = this.randomCookie();
-    this.customersHour.push(custHour);
-    cookiesHour = Math.floor(custHour * this.avgCookCust);
-    this.totalSalesByHour.push(cookiesHour);
-    cookiesDay += cookiesHour;
+// Picks a random product from the array.
+var randomProduct = function() {
+  return Math.floor(Math.random() * (products.length));
+};
+
+// Assigns a random image to each of the three product slots and makes sure no picture is shown twice or was just shown in that slot.
+var pickProducts = function() {
+  var prodLeft = randomProduct();
+  while (products[prodLeft].justShown === true) {
+    prodLeft = randomProduct();
+  }
+  var prodCenter = randomProduct();
+  while ((products[prodCenter].justShown === true) || (prodCenter === prodLeft)) {
+    prodCenter = randomProduct();
   };
-  this.totalSalesDay = cookiesDay;
+  var prodRight = randomProduct();
+  while ((products[prodRight].justShown === true) || (prodRight === prodLeft) || (prodRight === prodCenter)) {
+    prodRight = randomProduct();
+  }
+  if (imageSlot.length > 0) {
+    justShownFalse(imageSlot[0], imageSlot[1], imageSlot[2]);
+  }
+  return [prodLeft, prodCenter, prodRight];
 };
 
-// Run the hourly sales function for each store object
-function generateHourlySales() {
-  for(var h = 0; h < stores.length; h++) {
-    stores[h].hourlySales();
+// Resets justShown to false, so it can be displayed again.
+function justShownFalse(left, center, right) {
+  products[left].justShown = false;
+  products[center].justShown = false;
+  products[right].justShown = false;
+};
+
+// Draws the three products on the page, increments the counter for each product shown, and sets the justShown flag to true.
+var drawProduct = function() {
+  imageSlot = pickProducts();
+  document.getElementById('prodLeft').src = products[imageSlot[0]].fileName;
+  // console.log('0: ', imageSlot[0], '1: ', imageSlot[1], '2: ', imageSlot[2]);
+  // localStorage.imageSlot0 = imageSlot[0];
+  document.getElementById('prodCenter').src = products[imageSlot[1]].fileName;
+  // localStorage.imageSlot1 = imageSlot[1];
+  document.getElementById('prodRight').src = products[imageSlot[2]].fileName;
+  // localStorage.imageSlot1 = imageSlot[2];
+
+  products[imageSlot[0]].totalShown++;
+  products[imageSlot[1]].totalShown++;
+  products[imageSlot[2]].totalShown++;
+  products[imageSlot[0]].justShown = true;
+  products[imageSlot[1]].justShown = true;
+  products[imageSlot[2]].justShown = true;
+};
+
+drawProduct();
+
+// checkForClick();
+// if (!localStorage.trialCounter) {
+//   drawProduct();
+// } else if (Number(localStorage.trialCounter) < 25) {
+//   trialCounter = Number(localStorage.trialCounter);
+//   products = JSON.parse(localStorage.products);
+//   x = Number(localStorage.imageSlot[0]);
+//   y = Number(localStorage.imageSlot[1]);
+//   z = Number(localStorage.imageSlot[2]);
+//   drawProduct();
+// } else {
+//   showResult();
+// }
+
+// Checks for clicks on the three displayed products.
+// function checkForClick() {
+document.getElementById('prodLeft').addEventListener('click', clickEvent);
+document.getElementById('prodCenter').addEventListener('click', clickEvent);
+document.getElementById('prodRight').addEventListener('click', clickEvent);
+// }
+
+// Tracks which product the user clicked on, increments the clicked counter for that product, increments the trial counter, then generates a new set of pictures.
+function clickEvent(event) {
+  var targetName = event.target.src;
+  targetName = targetName.split('image/')[1].split('.jpg')[0];
+  for (var j = 0; j < products.length; j++) {
+    if (targetName === products[j].name) {
+      products[j].totalClicks++;
+      trialCounter++;
+      // localStorage.trialCounter = trialCounter;
+      break;
+    }
   }
+  if (trialCounter >= trialTrigger) {
+    showResult();
+    return;
+  }
+  drawProduct();
 }
 
-// Draw the cookie sales table
-function drawSalesTable() {
-  var j = 0;
-  var store = stores[j];
-  var tHeader = document.getElementById('table_cookie_header');
-  var tHeaderRow = document.createElement('tr');
-  var tHeaderData = document.createElement('td');
-  tHeaderRow.appendChild(tHeaderData);
-  for (var i = 0; i < hours.length; i++) {
-    tHeaderData = document.createElement('td');
-    // var newText = document.createTextNode(hours[i]);
-    tHeaderData.innerHTML = hours[i];
-    tHeaderRow.appendChild(tHeaderData);
+// Shuts off the event listeners, runs capitalizeName, pushes the data into empty arrays for the chart, then runs make chart.
+function showResult() {
+  document.getElementById('prodLeft').removeEventListener('click', clickEvent);
+  document.getElementById('prodCenter').removeEventListener('click', clickEvent);
+  document.getElementById('prodRight').removeEventListener('click', clickEvent);
+  var capitalizedName;
+  for (var l = 0; l < products.length; l++) {
+    productsShown[l] = ((productsShown[l] || 0) + products[l].totalShown);
+    productsClicked[l] = ((productsClicked[l] || 0) + products[l].totalClicks);
+    capitalizedName = capitalizeName(products[l].name);
+    productsNames.push(capitalizedName);
   }
-  tHeaderData = document.createElement('td');
-  tHeaderData.innerHTML = 'Daily Location Total';
-  tHeaderRow.appendChild(tHeaderData);
-  tHeader.appendChild(tHeaderRow);
-  var tBody = document.getElementById('table_cookie_content');
-  var tRow;
-  var tData;
-  for (j = 0; j < stores.length; j++) {
-    store = stores[j];
-    tRow = document.createElement('tr');
-    tData = document.createElement('td');
-    tData.innerHTML = store.name;
-    tRow.appendChild(tData);
-    for (var k = 0; k < hours.length; k++) {
-      tData = document.createElement('td');
-      tData.innerHTML = store.totalSalesByHour[k];
-      tRow.appendChild(tData);
-    }
-    tData = document.createElement('td');
-    tData.innerHTML = store.totalSalesDay;
-    tRow.appendChild(tData);
-    tBody.appendChild(tRow);
-  }
-  var allStoresHour = 0;
-  var tFooter = document.getElementById('table_cookie_footer');
-  var tFooterRow = document.createElement('tr');
-  var tFooterData = document.createElement('td');
-  tFooterData.innerHTML = 'Totals:';
-  tFooterRow.appendChild(tFooterData);
-  for (var l = 0; l < hours.length; l++) {
-    tFooterData = document.createElement('td');
-    for (var m = 0; m < stores.length; m++) {
-      allStoresHour += stores[m].totalSalesByHour[l];
-    }
-    tFooterData.innerHTML = allStoresHour;
-    allStoresHour = 0;
-    tFooterRow.appendChild(tFooterData);
-  }
-  tFooterData = document.createElement('td');
-  tFooterRow.appendChild(tFooterData);
-  tFooter.appendChild(tFooterRow);
+  localStorage.productsShown = JSON.stringify(productsShown);
+  localStorage.productsClicked = JSON.stringify(productsClicked);
+  makeChart();
 }
 
-// Draw the staffing table
-function drawStaffTable() {
-  var j = 0;
-  var store = stores[j];
-  var tHeader = document.getElementById('table_staff_header');
-  var tHeaderRow = document.createElement('tr');
-  var tHeaderData = document.createElement('td');
-  tHeaderRow.appendChild(tHeaderData);
-  for (var i = 0; i < hours.length; i++) {
-    tHeaderData = document.createElement('td');
-    tHeaderData.innerHTML = hours[i];
-    tHeaderRow.appendChild(tHeaderData);
-  }
-  tHeader.appendChild(tHeaderRow);
-  var tBody = document.getElementById('table_staff_content');
-  var tRow;
-  var tData;
-  var staffNeeded = 0;
-  for (j = 0; j < stores.length; j++) {
-    store = stores[j];
-    tRow = document.createElement('tr');
-    tData = document.createElement('td');
-    tData.innerHTML = store.name;
-    tRow.appendChild(tData);
-    for (var k = 0; k < hours.length; k++) {
-      staffNeeded = Math.ceil(store.customersHour[k] / 20);
-      if (staffNeeded < 2) {
-        staffNeeded = 2;
+// Capitalizes the first letter of each product name.
+function capitalizeName(name) {
+  var nameArray = name.split('');
+  var firstLetter = name.split('')[0].toUpperCase();
+  nameArray[0] = firstLetter;
+  name = nameArray.join('');
+  return name;
+}
+
+// Draws the chart
+function makeChart() {
+  var ctx = document.getElementById('productChart').getContext('2d');
+  ctx.canvas.width = '960';
+  ctx.canvas.height = '250';
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productsNames,
+      datasets: [{
+        label: 'Times Shown',
+        data: productsShown,
+        backgroundColor: '#27AE60',
+        borderColor: '#000',
+        borderWidth: 1
+      },
+      {
+        label: 'Times Selected',
+        data: productsClicked,
+        backgroundColor: '#F39C12',
+        borderColor: '#000',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
       }
-      tData = document.createElement('td');
-      tData.innerHTML = staffNeeded;
-      tRow.appendChild(tData);
     }
-    tBody.appendChild(tRow);
-  }
-}
+  });
+};
 
-// Look for form data
-var form = document.getElementById('store_form');
-form.addEventListener('submit', formData);
-
-// Add the form data to both tables
-function formData(event) {
-  event.preventDefault();
-  var name = event.target.name.value;
-  var minCust = event.target.min_cust.value;
-  var maxCust = event.target.max_cust.value;
-  var avgCust = event.target.avg_cook_cust.value;
-  var newStore = new Store(name, minCust, maxCust, avgCust);
-  newStore.hourlySales();
-  stores.push(newStore);
-  document.getElementById('table_cookie_header').innerHTML = '';
-  document.getElementById('table_cookie_content').innerHTML = '';
-  document.getElementById('table_cookie_footer').innerHTML = '';
-  drawSalesTable();
-  document.getElementById('table_staff_header').innerHTML = '';
-  document.getElementById('table_staff_content').innerHTML = '';
-  document.getElementById('table_staff_footer').innerHTML = '';
-  drawStaffTable();
-  form.reset();
-}
-
-generateHourlySales();
-drawSalesTable();
-drawStaffTable();
-
-// Auto-expand text area for forms
-function adjust_textarea(h) {
-  h.style.height = "20px";
-  h.style.height = (h.scrollHeight)+"px";
-}
+// Stores the results locally.
+// localStorage.products = [‘’];
+// localStorage.hat;
+// delete localStorage.prop;
+//
+// localStorage.setItem(‘product1’, ‘clicks’);
+// localStorage.getItem(‘product1’);
+// localStorage.removeItem(‘key’);

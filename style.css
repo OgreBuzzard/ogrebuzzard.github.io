@@ -1,187 +1,59 @@
-@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
+* {
+  font-family: Arial, Verdana, sans-serif;
+  color: #654;
+  text-align: center;
+}
 
 body {
-  background-color: #ECECEB;
-  margin: 10px;
-  width: 940px;
+  width: 960px;
+  margin: 0 auto;
 }
 
 header {
-  background-color: #74B0AD;
+  background-color: #EFEFEF;
+  height: 100px;
+  margin: 10px;
+  padding: 10px;
+}
+
+h1, h2 {
+  margin: 5px;
+  padding: 5px;
+}
+
+.prodPicker {
+  overflow: auto;
+  height: 100%;
+  /*width: 940px;
+  margin: 10px;*/
+}
+
+.product {
+  border: 10px inset lightblue;
+  cursor: pointer;
+  width: 275px;
+  float: left;
   margin: 10px;
   height: 200px;
+  background-color: #FFF;
+  object-fit: contain;
 }
 
-main {
-  margin: 0px;
-  width: 940px;
+#results {
+
 }
 
-h1 {
-  font-family: 'Amatic SC';
-  font-size: 96px;
-  text-align: center;
-  position: relative;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-nav {
-  background-color: #568C8A;
-  height: 30px;
-  margin: 10px;
-  text-align: center;
-}
-
-h2 {
-  font-family: helvetica;
-  text-align: center;
-}
-
-h3 {
-  font-family: Helvetica;
-  font-size: 20px;
-  display: inline;
-  color: #000;
-  font-weight: bold;
-  margin: 0 100px;
+.productList {
+  list-style-type: none;
+  display: inline-block;
 }
 
 p {
-  font-family: Helvetica;
-  font-size: 20px;
-  color: #000;
-  text-align: center;
-}
-
-a:hover, a:visited, a:link, a:active
-{
-    text-decoration: none;
-    color: #000;
-}
-
-text {
-  font-family: georgia;
-  color: rgb(184, 103, 54);
-}
-
-img {
-  width: 300px;
-}
-
-.salmoncookies {
-  width: 30%;
-  margin: auto;
-  display: block;
-}
-
-table {
-  background-color: #D9853C;
-  font-family: georgia;
-  font-size: 12px;
-  margin: 10px;
-}
-
-table, th, td {
-  border: 1px solid black;
-}
-
-.tables {
-  width: 700px;
-  display: inline-block;
-  margin: 0;
-}
-
-/* Form style */
-.formBox {
-  display: inline-block;
-  vertical-align: top;
-  width: 200px;
-  margin: 10px;
-}
-.form-style {
-    /*float: right;*/
-    background: #568C8A;
-    border-radius:2px;
-    padding:20px;
-    font-family: Georgia, "Times New Roman", Times, serif;
-}
-.form-style h1{
-    display: block;
-    text-align: center;
-    padding: 0;
-    margin: 0px 0px 20px 0px;
-    color: #5C5C5C;
-    font-size:x-large;
-}
-.form-style fieldset{
-    display: block;
-    padding: 9px;
-    border:1px solid #000;
-    margin-bottom: 30px;
-    border-radius: 3px;
-}
-.form-style fieldset:last-child{
-    border:none;
-    margin-bottom: 0px;
-    text-align: center;
-}
-.form-style fieldset > label{
-    display: block;
-    float: left;
-    margin-top: -28px;
-    background: ##74B0AD;
-    height: 14px;
-    padding: 2px 5px 2px 5px;
-    color: #000;
-    font-size: 14px;
-    overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-}
-.form-style input[type="text"],
-.form-style input[type="number"],
-.form-style textarea,
-.form-style select
-{
-    background: #568C8A;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    width: 100%;
-    display: block;
-    outline: none;
-    border: none;
-    height: 25px;
-    line-height: 25px;
-    font-size: 16px;
-    padding: 0;
-    font-family: Georgia, "Times New Roman", Times, serif;
-}
-.form-style input[type="text"]:focus,
-.form-style input[type="number"]:focus,
-.form-style textarea:focus,
-.form-style select:focus
-{
-}
-.form-style fieldset > span{
-    background: #74B0AD;
-    display: block;
-    padding: 3px;
-    margin: 0 -9px -9px -9px;
-    text-align: center;
-    color: #FFF;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
-}
-.form-style textarea{
-    resize:none;
-}
-.form-style button[type="submit"]{
-    background: #74B0AD;
-    border: none;
-    padding: 10px 20px 10px 20px;
-    border-radius: 3px;
-    color: #D2E2FF;
-}
-.form-style button[type="submit"]:hover{
-    background: #A8FFFB;
-    color:#fff;
+  font-weight: bold;
+  margin: 5px;
 }

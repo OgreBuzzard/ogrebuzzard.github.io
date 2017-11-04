@@ -1,35 +1,24 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- meta data goes here -->
-    <title>Pat's Salmon Cookies</title>
-    <!-- <link rel="stylesheet" href="reset.css"> -->
+    <title>Bus Mall</title>
+<!-- <link rel="stylesheet" href="reset.css"> -->
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
   </head>
   <body>
     <header>
-      <h1>Pat's Salmon Cookies</h1>
+      <h1>Bus Mall</h1>
+      <h2>Focus Group Product Tester</h2>
     </header>
-    <nav>
-      <h3><a href="index.html">About Salmon Cookies</a></h3>
-        <h3><a href="sales.html">Top Secret Sales Data</a></h3>
-      </ul>
-    </nav>
     <main>
-      <div class="salmoncookies">
-        <p>Oh, my god. Our cookies are amazing. They are made out of these things.</p>
-        <img src="image/salmon.png">
-        <p>And these things.</p>
-        <img src="image/chinook.jpg">
-        <p>We grind them up into tiny bits, and then stomp them with these things.</p>
-        <img src="image/cutter.jpeg">
-        <p>We splooge frosting on top, and then we get these things.</p>
-        <img src="image/frosted-cookie.jpg">
-        <p>Coming soon: People cookies made out of these things!</p>
-        <img src="image/family.jpg">
-      </div>
+      <ul id="prodPicker">
+        <li class="productList"><img id="prodLeft" class="product"><p>Product 1</p></li>
+        <li class="productList"><img id="prodCenter" class="product"><p>Product 2</p></li>
+        <li class="productList"><img id="prodRight" class="product"><p>Product 3</p></li>
+      <ul id="results"></ul>
+      <canvas id="productChart"></canvas>
     </main>
   </body>
+  <script src="app.js"></script>
 </html>
